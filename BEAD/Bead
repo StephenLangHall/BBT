@@ -1,0 +1,58 @@
+#!/bin/bash
+
+source BEAD/Commands
+
+function Set {
+	File=DATA/$(printf $1 | tr '.' '/')
+	mkdir -p "$(printf $File | rev | cut -f 2- -d "/" | rev)" && \
+	echo ${2} > ${File}
+}
+
+function Get {
+	cat DATA/$(printf $1 | tr '.' '/')
+}
+
+function Run {
+	Init
+	CMDS=${Return}
+	unset Return
+
+	for CMD in ${CMDS}
+	do
+		${CMD}
+	done
+
+	unset STRCMDS CMDS CMD
+
+	mkdir DATA
+	InitModel
+
+	while [ -z "$RUNING" ]
+	do
+		# clear screen, goto 0 0, print view
+		printf "\e[2J\e[H$(View)"
+		read -sn 1 KEY
+
+		Update
+		CMDS=${Return}
+		unset Return
+
+		for CMD in ${CMDS}
+		do
+			echo "$CMD"
+			${CMD}
+		done
+
+		unset STRCMDS CMDS CMD
+	done
+
+	# restore screen
+	printf '\e[?1049l'
+	# Hide cursor
+	printf '\e[?25h'
+	# Disable line wrap
+	printf '\e[?7h'
+	
+	rm -rf DATA
+}
+

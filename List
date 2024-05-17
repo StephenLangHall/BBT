@@ -1,0 +1,34 @@
+#!/bin/bash
+
+source BEAD/Bead
+
+InitModel (){
+	Set MODEL.List.a 'item a'
+	Set MODEL.List.b 'item b'
+	Set MODEL.List.c 'item c'
+	Set MODEL.Sel 0
+	Set MODEL.CurrentKey 'nil'
+}
+
+Init (){
+	Return=("EnterAltScreen")
+}
+
+Update (){
+	Return=()
+	case $KEY in
+	"q") Return=("Quit") ;;
+	"k") [ $(Get MODEL.Sel) -gt 0 ] && Set MODEL.Sel $(($(Get MODEL.Sel) -1)) ;;
+	"j") [ $(Get MODEL.Sel) -lt 2 ] && Set MODEL.Sel $(($(Get MODEL.Sel) +1)) ;;
+	*) Set MODEL.CurrentKey $KEY ;;
+	esac
+}
+
+View (){
+	echo "$([ $(Get MODEL.Sel) = 0 ] && printf ":" || printf " ") $(Get MODEL.List.a)"
+	echo "$([ $(Get MODEL.Sel) = 1 ] && printf ":" || printf " ") $(Get MODEL.List.b)"
+	echo "$([ $(Get MODEL.Sel) = 2 ] && printf ":" || printf " ") $(Get MODEL.List.c)"
+	echo "$(Get MODEL.CurrentKey)"
+}
+
+Run

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+function Quit {
+	export RUNING=1
+}
+
+function EnterAltScreen {
+	# save screen
+	printf '\e[?1049h'
+	# Hide cursor
+	printf '\e[?25l'
+	# Disable line wrap
+	printf '\e[?7l'
+}
+
+function Mkdir {
+	mkdir USELESS
+}
